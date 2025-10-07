@@ -1,4 +1,4 @@
-import ApplicationLayout from "@/components/applicationLayout";
+import Header from "../components/app/header";
 
 export default function RootLayout({
     children,
@@ -6,8 +6,9 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <ApplicationLayout>
+        <div className="h-screen">
+            <Header />
             {children}
-        </ApplicationLayout>
+        </div>
     );
 }

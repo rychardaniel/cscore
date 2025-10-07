@@ -1,29 +1,21 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
+import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import {AntdProvider} from "./providers/AntdProvider";
 
-const geistSans = localFont({
-    src: "./fonts/GeistVF.woff",
+const geistSans = Geist({
     variable: "--font-geist-sans",
-    weight: "100 900",
-    display: "swap",
-    preload: true,
+    subsets: ["latin"],
 });
-const geistMono = localFont({
-    src: "./fonts/GeistMonoVF.woff",
+
+const geistMono = Geist_Mono({
     variable: "--font-geist-mono",
-    weight: "100 900",
-    display: "swap",
-    preload: true,
+    subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
     title: "Cscore",
-    description: "Live sports scores",
-    icons: {
-        icon: "/favicon.svg",
-    },
+    description: "Application for live academic games",
+    icons: "favicon.svg",
 };
 
 export default function RootLayout({
@@ -33,12 +25,8 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body
-                className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-            >
-                <AntdProvider>
-                    {children}
-                </AntdProvider>
+            <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+                {children}
             </body>
         </html>
     );
