@@ -4,6 +4,8 @@
     --background: #F6F7F8;
     --foreground: #111827;
     --blue: #1173D4;
+    --gray-light-1: #F3F4F6;
+    --gray-light-2: #E5E7EB;
 }
 
 @theme inline {
@@ -15,8 +17,8 @@
 
 /* @media (prefers-color-scheme: dark) {
     :root {
-        --background: #0a0a0a;
-        --foreground: #ededed;
+        --background: #111827;
+        --foreground: #F6F7F8;
     }
 } */
 
