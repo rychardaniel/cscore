@@ -1,4 +1,4 @@
-import HeaderProvider from "../components/app/header";
+import HeaderProvider from "../context/headerContext";
 
 export default function RootLayout({
     children,
@@ -6,8 +6,8 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <div className="h-screen">
-            <HeaderProvider>{children}</HeaderProvider>
-        </div>
+        <HeaderProvider>
+            <div className="h-screen">{children}</div>
+        </HeaderProvider>
     );
 }

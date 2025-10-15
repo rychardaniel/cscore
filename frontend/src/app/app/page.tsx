@@ -1,14 +1,18 @@
 "use client";
 
-import { useHeader } from "../components/app/header";
-import { Button } from "antd";
+import { Header } from "../components/header/header";
+import { useHeader } from "../context/headerContext";
 
 export default function App() {
-    const { setNavBar } = useHeader();
+    const { searchValue } = useHeader();
     return (
-        <div className="flex justify-center items-center h-full">
-            body
-            <Button onClick={setNavBar}>Clique aqui</Button>
-        </div>
+        <>
+            <Header />
+            <div className="h-[calc(100vh-4rem)]">
+                <div className="flex justify-center items-center h-full">
+                    <h1>{searchValue}</h1>
+                </div>
+            </div>
+        </>
     );
 }
