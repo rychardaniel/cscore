@@ -2,9 +2,7 @@ import { Icon } from "@iconify/react";
 import { Alert, Button, Flex, Popover } from "antd";
 import { useState } from "react";
 
-type NotificationProps = {};
-
-export function Notification({}: NotificationProps) {
+export function Notification() {
     const [open, setOpen] = useState(false);
 
     const handleOpenChange = (newOpen: boolean) => {
@@ -19,8 +17,8 @@ export function Notification({}: NotificationProps) {
             open={open}
             onOpenChange={handleOpenChange}
             placement="bottom"
-			arrow
-			styles={{body: {maxWidth: "20rem"}}}
+            arrow
+            styles={{ body: { maxWidth: "20rem" } }}
         >
             <Button
                 type="text"
@@ -33,7 +31,11 @@ export function Notification({}: NotificationProps) {
 function Content() {
     return (
         <Flex>
-			<Alert showIcon type={"info"} title={"Você precisa estar conectado para receber notificações"}/>
+            <Alert
+                showIcon
+                type={"info"}
+                title={"Você precisa estar conectado para receber notificações"}
+            />
         </Flex>
     );
 }

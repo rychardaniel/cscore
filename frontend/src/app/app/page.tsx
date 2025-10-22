@@ -10,7 +10,7 @@ const TABS_CONFIG = [
     { key: "2", label: "Campeonatos", searchHidden: false, placeholder: "Buscar campeonatos..." },
     { key: "3", label: "Equipes", searchHidden: false, placeholder: "Buscar equipes..." },
     { key: "4", label: "Resultados", searchHidden: true, placeholder: "" },
-]
+];
 
 export default function App() {
     const itemsTabs = useMemo(
@@ -35,7 +35,7 @@ function ContentBodyApp() {
 
     useEffect(() => {
         if (keyItemTab) {
-            const config = TABS_CONFIG[parseInt(keyItemTab)-1];
+            const config = TABS_CONFIG[parseInt(keyItemTab) - 1];
 
             if (config) {
                 configureHeader({

@@ -2,9 +2,7 @@ import { Flex, Avatar, Popover, Button } from "antd";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
 
-interface AvatarProps {}
-
-export function AvatarIcon({}: AvatarProps) {
+export function AvatarIcon() {
     const [open, setOpen] = useState(false);
 
     const handleOpenChange = (newOpen: boolean) => {
@@ -31,9 +29,7 @@ export function AvatarIcon({}: AvatarProps) {
     );
 }
 
-interface AvatarContentProps {}
-
-function AvatarContent({}: AvatarContentProps) {
+function AvatarContent() {
     return (
         <div>
             <h4>Avatar</h4>

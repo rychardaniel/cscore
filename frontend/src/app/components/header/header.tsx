@@ -1,6 +1,6 @@
 "use client";
 
-import { Avatar, Flex, Input, TabsProps } from "antd";
+import { Flex, TabsProps } from "antd";
 import { Icon } from "@iconify/react";
 import { Search } from "../header/search";
 import { useHeader } from "@/app/context/headerContext";
@@ -34,10 +34,7 @@ export function Header({ itemsTabs, defaultActiveKey }: HeaderProps) {
                     <TabsHeader items={itemsTabs} defaultActiveKey={defaultActiveKey} />
                     <Flex style={{ width: "20%" }}>
                         <Flex hidden={hiddenSearch} style={{ width: "100%" }}>
-                            <Search
-                                value={searchValue}
-                                setValue={setSearchValue}
-                            />
+                            <Search value={searchValue} setValue={setSearchValue} />
                         </Flex>
                     </Flex>
                 </Flex>

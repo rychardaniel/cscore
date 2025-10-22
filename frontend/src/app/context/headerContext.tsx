@@ -15,11 +15,7 @@ type HeaderContextData = {
     setHiddenSearch: Dispatch<SetStateAction<boolean>>;
     keyItemTab: string;
     setKeyItemTab: Dispatch<SetStateAction<string>>;
-    configureHeader: (config: { 
-        placeholder?: string; 
-        hidden?: boolean; 
-        tabKey?: string; 
-    }) => void;
+    configureHeader: (config: { placeholder?: string; hidden?: boolean; tabKey?: string }) => void;
 };
 
 export const HeaderContext = createContext<HeaderContextData | null>(null);
@@ -36,10 +32,14 @@ export default function HeaderProvider({ children }: HeaderProviderProps) {
     const [keyItemTab, setKeyItemTab] = useState<string>("");
     const [placeholderSearch, setPlaceholderSearch] = useState<string>("");
 
-    const configureHeader = ({ placeholder, hidden, tabKey }: { 
-        placeholder?: string; 
-        hidden?: boolean; 
-        tabKey?: string; 
+    const configureHeader = ({
+        placeholder,
+        hidden,
+        tabKey,
+    }: {
+        placeholder?: string;
+        hidden?: boolean;
+        tabKey?: string;
     }) => {
         if (placeholder !== undefined) setPlaceholderSearch(placeholder);
         if (hidden !== undefined) setHiddenSearch(hidden);
