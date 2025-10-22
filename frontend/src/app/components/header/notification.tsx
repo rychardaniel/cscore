@@ -24,7 +24,7 @@ export function Notification({}: NotificationProps) {
         >
             <Button
                 type="text"
-                icon={<Icon icon="ic:outline-notifications" className="text-2xl" />}
+                icon={<Icon icon="ic:outline-notifications" className="text-xl" />}
             />
         </Popover>
     );

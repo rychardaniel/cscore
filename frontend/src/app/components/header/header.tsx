@@ -1,17 +1,20 @@
 "use client";
 
-import { Flex, Input } from "antd";
+import { Avatar, Flex, Input, TabsProps } from "antd";
 import { Icon } from "@iconify/react";
 import { Search } from "../header/search";
 import { useHeader } from "@/app/context/headerContext";
 import { Notification } from "./notification";
+import { AvatarIcon } from "./avatar";
+import TabsHeader from "./tabs";
 
 type HeaderProps = {
-    // children: React.ReactNode;
+    itemsTabs?: TabsProps["items"];
+    defaultActiveKey?: string;
 };
 
-export function Header({}: HeaderProps) {
-    const {searchValue, setSearchValue} = useHeader()
+export function Header({ itemsTabs, defaultActiveKey }: HeaderProps) {
+    const { searchValue, setSearchValue, hiddenSearch } = useHeader();
     return (
         <Flex
             justify="center"
@@ -28,24 +31,18 @@ export function Header({}: HeaderProps) {
                         <Icon icon="iconoir:graduation-cap" className="text-2xl text-(--blue)" />
                         <h2 className="font-bold">Cscore</h2>
                     </Flex>
-                    <nav>
-                        <ul className="flex gap-6">
-                            <li>Home</li>
-                            <li>About</li>
-                            <li>Contact</li>
-                            <li>Login</li>
-                        </ul>
-                    </nav>
-                    <div className="w-2/10">
-                        <Search
-                            value={searchValue}
-                            setValue={setSearchValue}
-                            placeholder="Buscar campeonato..."
-                        />
-                    </div>
+                    <TabsHeader items={itemsTabs} defaultActiveKey={defaultActiveKey} />
+                    <Flex style={{ width: "20%" }}>
+                        <Flex hidden={hiddenSearch} style={{ width: "100%" }}>
+                            <Search
+                                value={searchValue}
+                                setValue={setSearchValue}
+                            />
+                        </Flex>
+                    </Flex>
                 </Flex>
                 <Notification />
-                <div>User</div>
+                <AvatarIcon />
             </div>
         </Flex>
     );
