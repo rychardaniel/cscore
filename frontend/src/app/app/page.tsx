@@ -4,13 +4,16 @@ import { TabsProps } from "antd";
 import { Header } from "../components/header/header";
 import { useHeader } from "../context/headerContext";
 import { useEffect, useMemo } from "react";
+import { Championships } from "../components/app/content/championships";
+import { LayoutDefault } from "../components/layout/layoutDefault";
+import { ContentLayout } from "../components/app/content/contentLayout";
 
 const TABS_CONFIG = [
     { key: "1", label: "Início", searchHidden: true, placeholder: "" },
     { key: "2", label: "Campeonatos", searchHidden: false, placeholder: "Buscar campeonatos..." },
     { key: "3", label: "Equipes", searchHidden: false, placeholder: "Buscar equipes..." },
     { key: "4", label: "Resultados", searchHidden: true, placeholder: "" },
-];
+] as const;
 
 export default function App() {
     const itemsTabs = useMemo(
@@ -19,14 +22,10 @@ export default function App() {
     );
 
     return (
-        <>
-            <Header itemsTabs={itemsTabs} defaultActiveKey="2" />
-            <div className="h-[calc(100vh-4rem)]">
-                <div className="flex justify-center items-center h-full">
-                    <ContentBodyApp />
-                </div>
-            </div>
-        </>
+        <LayoutDefault
+            header={<Header itemsTabs={itemsTabs} defaultActiveKey="2" />}
+            content={<ContentBodyApp />}
+        />
     );
 }
 
@@ -51,7 +50,7 @@ function ContentBodyApp() {
             case "1":
                 return <div>Início Content</div>;
             case "2":
-                return <div>Campeonatos Content</div>;
+                return <Championships />;
             case "3":
                 return <div>Equipes Content</div>;
             case "4":
@@ -60,6 +59,5 @@ function ContentBodyApp() {
                 return <div>Selecione uma aba</div>;
         }
     };
-
-    return renderContent();
+    return <ContentLayout>{renderContent()}</ContentLayout>;
 }
