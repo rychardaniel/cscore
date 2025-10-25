@@ -12,7 +12,7 @@ const workSans = Work_Sans({
 export const metadata: Metadata = {
     title: "Cscore",
     description: "Application for live academic games",
-    icons: "favicon.svg",
+    icons: "/favicon.svg",
 };
 
 export default function RootLayout({
