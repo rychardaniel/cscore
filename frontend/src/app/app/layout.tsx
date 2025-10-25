@@ -1,3 +1,5 @@
+import { Header } from "../components/header/header";
+import { LayoutDefault } from "../components/layout/layoutDefault";
 import HeaderProvider from "../context/headerContext";
 
 export default function RootLayout({
@@ -7,7 +9,7 @@ export default function RootLayout({
 }>) {
     return (
         <HeaderProvider>
-            <div className="h-screen">{children}</div>
+            <LayoutDefault header={<Header />} content={children} />
         </HeaderProvider>
     );
 }

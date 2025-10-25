@@ -1,3 +1,5 @@
+"use client";
+
 import { Button, Card, Empty, Flex, Spin, Typography } from "antd";
 import { useEffect, useState } from "react";
 

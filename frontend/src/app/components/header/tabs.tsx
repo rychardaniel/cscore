@@ -1,27 +1,18 @@
-import { useHeader } from "@/app/context/headerContext";
 import { Flex, Tabs, TabsProps } from "antd";
-import React, { useEffect } from "react";
 
 type TabsHeaderProps = {
-    items?: TabsProps["items"];
-    defaultActiveKey?: string;
+    items: TabsProps["items"];
+    activeKey: string;
+    setActiveTab: (value: string) => void;
 };
 
-export default function TabsHeader({ items, defaultActiveKey }: TabsHeaderProps) {
-    const { setKeyItemTab } = useHeader();
-
-    useEffect(() => {
-        if (defaultActiveKey) {
-            setKeyItemTab(defaultActiveKey);
-        }
-    }, [defaultActiveKey, setKeyItemTab]);
-
+export function TabsHeader({ activeKey, items, setActiveTab }: TabsHeaderProps) {
     return (
         <Flex align="center">
             <Tabs
-                defaultActiveKey={defaultActiveKey}
                 styles={{ header: { margin: 0 } }}
-                onChange={(key) => setKeyItemTab(key)}
+                onChange={(key) => setActiveTab(key)}
+                activeKey={activeKey}
                 items={items}
             />
         </Flex>
