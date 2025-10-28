@@ -1,8 +1,10 @@
+using Cscore.API.DTOs;
 using Cscore.API.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cscore.API.Controllers;
 
+[ApiController]
 [Route("championships")]
 public class ChampionshipsController : ControllerBase
 {
@@ -16,6 +18,16 @@ public class ChampionshipsController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        return Ok(await _repository.GetAllAsync());
+        var championships = await _repository.GetAllAsync();
+
+        var championshipDtos = championships.Select(championship =>
+            new ChampionshipResponseDto(
+                championship.Id ?? "",
+                championship.Name,
+                championship.StartDate,
+                championship.EndDate
+            ));
+
+        return Ok(championshipDtos);
     }
 }
