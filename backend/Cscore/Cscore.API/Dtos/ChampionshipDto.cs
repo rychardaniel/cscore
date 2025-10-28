@@ -1,4 +1,4 @@
-namespace Cscore.API.DTOs;
+namespace Cscore.API.Dtos;
 
 public record CreateChampionshipDto(
     string Name,

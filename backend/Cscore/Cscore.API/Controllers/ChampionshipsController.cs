@@ -1,4 +1,4 @@
-using Cscore.API.DTOs;
+using Cscore.API.Dtos;
 using Cscore.API.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
