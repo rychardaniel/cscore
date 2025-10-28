@@ -17,15 +17,15 @@ public class ChampionshipRepository
         await _championships.Find(_ => true).ToListAsync();
 
     public async Task<ChampionshipModel?> GetByIdAsync(string id) =>
-        await _championships.Find(u => u.Id == id).FirstOrDefaultAsync();
+        await _championships.Find(c => c.Id == id).FirstOrDefaultAsync();
 
-    public async Task CreateAsync(ChampionshipModel usuario) =>
-        await _championships.InsertOneAsync(usuario);
+    public async Task CreateAsync(ChampionshipModel championship) =>
+        await _championships.InsertOneAsync(championship);
 
-    public async Task UpdateAsync(string id, ChampionshipModel usuario) =>
-        await _championships.ReplaceOneAsync(u => u.Id == id, usuario);
+    public async Task UpdateAsync(string id, ChampionshipModel championship) =>
+        await _championships.ReplaceOneAsync(c => c.Id == id, championship);
 
     public async Task DeleteAsync(string id) =>
-        await _championships.DeleteOneAsync(u => u.Id == id);
+        await _championships.DeleteOneAsync(c => c.Id == id);
 
 }
