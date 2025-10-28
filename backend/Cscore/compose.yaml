@@ -1,0 +1,7 @@
+﻿services:
+  cscore.api:
+    image: cscore.api
+    build:
+      context: .
+      dockerfile: Cscore.API/Dockerfile
+
