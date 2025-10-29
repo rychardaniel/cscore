@@ -1,5 +1,5 @@
-/backend/Cscore/Cscore.API/appsettings.json
-/backend/Cscore/Cscore.API/appsettings.Development.json
-/backend/Cscore/.idea
-/backend/Cscore/Cscore.API/bin
-/backend/Cscore/Cscore.API/obj
+/backend/Cscore.API/appsettings.json
+/backend/Cscore.API/appsettings.Development.json
+/backend/.idea
+/backend/Cscore.API/bin
+/backend/Cscore.API/obj
