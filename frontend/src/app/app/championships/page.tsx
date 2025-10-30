@@ -1,10 +1,10 @@
-import { Championships } from "@/app/components/app/content/championships";
-import { ContentLayout } from "@/app/components/app/content/contentLayout";
+import { ChampionshipsContent } from "@/app/components/content/championships";
+import { ContentLayout } from "@/app/components/content/contentLayout";
 
 export default function ChampionshipsPage() {
     return (
         <ContentLayout>
-            <Championships />
+            <ChampionshipsContent />
         </ContentLayout>
     );
 }

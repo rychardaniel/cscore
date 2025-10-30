@@ -3,14 +3,47 @@
 import { Flex, TabsProps } from "antd";
 import { Icon } from "@iconify/react";
 import { Search } from "../header/search";
-import { useHeader } from "@/app/context/headerContext";
+import { useHeader } from "@/app/contexts/headerContext";
 import { Notification } from "./notification";
 import { AvatarIcon } from "./avatar";
 import { TabsHeader } from "./tabs";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
-import { TABS_CONFIG } from "./constants";
+const TABS_CONFIG = [
+    {
+        key: "1",
+        label: "Início",
+        path: "/app",
+        searchHidden: true,
+        placeholder: "",
+        disabled: false,
+    },
+    {
+        key: "2",
+        label: "Campeonatos",
+        path: "/app/championships",
+        searchHidden: false,
+        placeholder: "Buscar campeonatos...",
+        disabled: false,
+    },
+    {
+        key: "3",
+        label: "Equipes",
+        path: "/app/3",
+        searchHidden: false,
+        placeholder: "Buscar equipes...",
+        disabled: true,
+    },
+    {
+        key: "4",
+        label: "Resultados",
+        path: "/app/4",
+        searchHidden: true,
+        placeholder: "",
+        disabled: true,
+    },
+] as const;
 
 export function Header() {
     const { searchValue, setSearchValue } = useHeader();
@@ -21,7 +54,7 @@ export function Header() {
     const router = useRouter();
 
     const tabs: TabsProps["items"] = useMemo(() => {
-        return TABS_CONFIG.map(({ key, label }) => ({ key, label }));
+        return TABS_CONFIG.map(({ key, label, disabled }) => ({ key, label, disabled }));
     }, []);
 
     useEffect(() => {

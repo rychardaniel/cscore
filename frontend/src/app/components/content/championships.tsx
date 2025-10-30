@@ -1,20 +1,22 @@
 "use client";
 
+import { Championship } from "@/app/interfaces/championship";
+import { ChampionshipService } from "@/app/services/championshipService";
 import { Button, Card, Empty, Flex, Spin, Typography } from "antd";
 import { useEffect, useState } from "react";
 
-export function Championships() {
-    const [championships, setChampionships] = useState<ChampionshipsInterface[]>([]);
-    const [loading, setLoading] = useState<boolean>(false);
+const { Title, Text } = Typography;
 
-    const { Title, Text } = Typography;
+export function ChampionshipsContent() {
+    const [championships, setChampionships] = useState<Championship[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
         async function loadChampionships() {
             try {
                 setLoading(true);
-                const championships = await fetchChampionshipsMock();
-                setChampionships(championships);
+                const championshipsData = await ChampionshipService.findAll();
+                setChampionships(championshipsData);
             } catch (error) {
                 console.error(error);
             } finally {
@@ -52,28 +54,10 @@ export function Championships() {
                             </Card>
                         ))
                     ) : (
-                        <Empty description={"Sem dados..."} />
+                        <Empty description={"Sem dados"} />
                     )}
                 </Flex>
             </Spin>
         </Flex>
     );
-}
-
-interface ChampionshipsInterface {
-    id: number;
-    name: string;
-    university: string;
-}
-
-function fetchChampionshipsMock(): Promise<Array<ChampionshipsInterface>> {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve([
-                { id: 1, name: "Campeonato de Futebol", university: "Setrem" },
-                { id: 2, name: "Campeonato de Basquete", university: "Unijuí" },
-                { id: 3, name: "Campeonato de Vôlei", university: "Fasa" },
-            ]);
-        }, 1000);
-    });
 }

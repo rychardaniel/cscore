@@ -11,6 +11,9 @@ public class ChampionshipModel
     
     [BsonElement("name")]
     public string Name { get; set; } = String.Empty;
+    
+    [BsonElement("university")]
+    public string University { get; set; } = String.Empty;
 
     [BsonElement("startDate")]
     public DateTime StartDate { get; set; }

@@ -3,3 +3,5 @@
 /backend/.idea
 /backend/Cscore.API/bin
 /backend/Cscore.API/obj
+/backend/.DS_Store
+.DS_Store

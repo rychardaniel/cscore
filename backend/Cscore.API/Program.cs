@@ -14,12 +14,12 @@ builder.Services.AddScoped<ChampionshipRepository>();
 
 var app = builder.Build();
 
+app.UsePathBase("/api");
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
-
-app.UseHttpsRedirection();
 
 app.UseAuthorization();
 

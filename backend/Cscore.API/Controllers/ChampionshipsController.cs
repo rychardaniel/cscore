@@ -24,6 +24,7 @@ public class ChampionshipsController : ControllerBase
             new ChampionshipResponseDto(
                 championship.Id ?? "",
                 championship.Name,
+                championship.University,
                 championship.StartDate,
                 championship.EndDate
             ));
