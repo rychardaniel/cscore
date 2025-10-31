@@ -14,7 +14,7 @@ export function LayoutDefault({ header, content }: LayoutDefaultProps) {
             {header}
             <div className="h-[calc(100vh-4rem)]">
                 <Flex justify="center" align="center" style={{ height: "100%" }}>
-                    {content}
+                    <div className="w-full max-w-[900px] p-4 h-full">{content}</div>
                 </Flex>
             </div>
         </div>

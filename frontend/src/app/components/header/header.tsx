@@ -3,12 +3,13 @@
 import { Flex, TabsProps } from "antd";
 import { Icon } from "@iconify/react";
 import { Search } from "../header/search";
-import { useHeader } from "@/app/contexts/headerContext";
 import { Notification } from "./notification";
 import { AvatarIcon } from "./avatar";
 import { TabsHeader } from "./tabs";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import { Grid } from "antd";
+const { useBreakpoint } = Grid;
 
 const TABS_CONFIG = [
     {
@@ -46,12 +47,12 @@ const TABS_CONFIG = [
 ] as const;
 
 export function Header() {
-    const { searchValue, setSearchValue } = useHeader();
     const [activeTab, setActiveTab] = useState<string>("");
     const [hiddenSearch, setHiddenSearch] = useState<boolean>(false);
     const [placeholderSearh, setPlaceholderSearch] = useState<string>("");
     const pathname = usePathname();
     const router = useRouter();
+    const screens = useBreakpoint();
 
     const tabs: TabsProps["items"] = useMemo(() => {
         return TABS_CONFIG.map(({ key, label, disabled }) => ({ key, label, disabled }));
@@ -77,36 +78,59 @@ export function Header() {
         }
     };
 
-    return (
-        <Flex
-            justify="center"
-            align="center"
-            style={{
-                height: 64,
-                borderBottom: "1px solid var(--gray-light-2)",
-                boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
-            }}
-        >
-            <div className="w-full max-w-[1200px] p-4 h-full flex justify-between items-center gap-4">
-                <Flex justify="space-between" style={{ width: "100%" }} align="center">
+    if (screens.md) {
+        return (
+            <Flex
+                justify="center"
+                align="center"
+                style={{
+                    height: 64,
+                    borderBottom: "1px solid var(--gray-light-2)",
+                    boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+                }}
+            >
+                <div className="w-full max-w-[1200px] p-4 h-full flex justify-between items-center gap-4">
                     <Flex gap={5}>
                         <Icon icon="iconoir:graduation-cap" className="text-2xl text-(--blue)" />
                         <h2 className="font-bold">Cscore</h2>
                     </Flex>
                     <TabsHeader items={tabs} activeKey={activeTab} setActiveTab={handleTabChange} />
-                    <Flex style={{ width: "20%" }}>
-                        <Flex hidden={hiddenSearch} style={{ width: "100%" }}>
-                            <Search
-                                value={searchValue}
-                                setValue={setSearchValue}
-                                placeholder={placeholderSearh}
+                    <Flex gap={"1rem"}>
+                        <Notification />
+                        <AvatarIcon />
+                    </Flex>
+                </div>
+            </Flex>
+        );
+    }
+
+    // Mobile Header
+    return (
+        <Flex
+            justify="center"
+            align="center"
+            style={{
+                height: 128,
+                borderBottom: "1px solid var(--gray-light-2)",
+                boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+            }}
+        >
+            <Flex vertical justify="center" align="center" flex={1}>
+                <div className="w-full max-w-[1200px] p-4 h-full flex justify-between items-center gap-4">
+                    <Flex justify="space-between" style={{ width: "100%" }} align="center">
+                        <Flex gap={5}>
+                            <Icon
+                                icon="iconoir:graduation-cap"
+                                className="text-2xl text-(--blue)"
                             />
+                            <h2 className="font-bold">Cscore</h2>
                         </Flex>
                     </Flex>
-                </Flex>
-                <Notification />
-                <AvatarIcon />
-            </div>
+                    <Notification />
+                    <AvatarIcon />
+                </div>
+                <TabsHeader items={tabs} activeKey={activeTab} setActiveTab={handleTabChange} />
+            </Flex>
         </Flex>
     );
 }

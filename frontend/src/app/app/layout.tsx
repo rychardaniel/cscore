@@ -1,7 +1,6 @@
 import { Metadata } from "next";
 import { Header } from "../components/header/header";
 import { LayoutDefault } from "../components/layout/layoutDefault";
-import HeaderProvider from "../contexts/headerContext";
 
 export const metadata: Metadata = {
     title: "Cscore",
@@ -14,9 +13,5 @@ export default function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    return (
-        <HeaderProvider>
-            <LayoutDefault header={<Header />} content={children} />
-        </HeaderProvider>
-    );
+    return <LayoutDefault header={<Header />} content={children} />;
 }
