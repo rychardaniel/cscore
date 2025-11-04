@@ -48,8 +48,6 @@ const TABS_CONFIG = [
 
 export function Header() {
     const [activeTab, setActiveTab] = useState<string>("");
-    const [hiddenSearch, setHiddenSearch] = useState<boolean>(false);
-    const [placeholderSearh, setPlaceholderSearch] = useState<string>("");
     const pathname = usePathname();
     const router = useRouter();
     const screens = useBreakpoint();
@@ -62,18 +60,13 @@ export function Header() {
         const currentTab = TABS_CONFIG.find((tab) => pathname === tab.path);
         if (currentTab && currentTab.key !== activeTab) {
             setActiveTab(currentTab.key);
-            setHiddenSearch(currentTab.searchHidden);
-            setPlaceholderSearch(currentTab.placeholder);
         }
-    }, [pathname]);
+    }, [pathname, activeTab]);
 
     const handleTabChange = (key: string) => {
         const tab = TABS_CONFIG.find((t) => t.key === key);
         if (tab) {
             setActiveTab(key);
-            setHiddenSearch(tab.searchHidden);
-            setPlaceholderSearch(tab.placeholder);
-
             router.push(tab.path);
         }
     };
