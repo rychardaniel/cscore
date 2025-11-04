@@ -6,6 +6,7 @@ namespace Cscore.API.Models;
 public class ChampionshipModel
 {
     [BsonId]
+    [BsonIgnoreIfNull]
     [BsonRepresentation(BsonType.ObjectId)]
     public string? Id { get; set; }
     
