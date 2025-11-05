@@ -63,7 +63,7 @@ export function Header() {
                 (tab) => tab.path !== "/app" && pathname.startsWith(tab.path)
             );
         }
-        
+
         if (currentTab && currentTab.key !== activeTab) {
             setActiveTab(currentTab.key);
         }
@@ -76,6 +76,8 @@ export function Header() {
             router.push(tab.path);
         }
     };
+
+    if (screens.md === undefined) return <></>
 
     if (screens.md) {
         return (
