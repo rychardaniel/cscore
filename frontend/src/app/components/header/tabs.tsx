@@ -11,7 +11,8 @@ export function TabsHeader({ activeKey, items, setActiveTab }: TabsHeaderProps) 
         <Flex align="center">
             <Tabs
                 styles={{ header: { margin: 0 } }}
-                onChange={(key) => setActiveTab(key)}
+                // onChange={(key) => setActiveTab(key)}
+                onTabClick={(key) => setActiveTab(key)}
                 activeKey={activeKey}
                 items={items}
             />

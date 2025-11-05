@@ -3,6 +3,7 @@
 import { Championship } from "@/app/interfaces/championship";
 import { ChampionshipService } from "@/app/services/championshipService";
 import { Button, Card, Empty, Flex, Spin, Typography } from "antd";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const { Title, Text } = Typography;
@@ -10,6 +11,7 @@ const { Title, Text } = Typography;
 export function ChampionshipsContent() {
     const [championships, setChampionships] = useState<Championship[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
+    const route = useRouter();
 
     useEffect(() => {
         async function loadChampionships() {
@@ -48,7 +50,14 @@ export function ChampionshipsContent() {
                                         <Text>{item.university}</Text>
                                     </Flex>
                                     <Flex>
-                                        <Button type="primary">Ver detalhes</Button>
+                                        <Button
+                                            type="primary"
+                                            onClick={() =>
+                                                route.push(`/app/championships/${item.id}`)
+                                            }
+                                        >
+                                            Ver detalhes
+                                        </Button>
                                     </Flex>
                                 </Flex>
                             </Card>

@@ -2,7 +2,6 @@
 
 import { Flex, TabsProps } from "antd";
 import { Icon } from "@iconify/react";
-import { Search } from "../header/search";
 import { Notification } from "./notification";
 import { AvatarIcon } from "./avatar";
 import { TabsHeader } from "./tabs";
@@ -31,7 +30,7 @@ const TABS_CONFIG = [
     {
         key: "3",
         label: "Equipes",
-        path: "/app/3",
+        path: "/app/TODO",
         searchHidden: false,
         placeholder: "Buscar equipes...",
         disabled: true,
@@ -39,7 +38,7 @@ const TABS_CONFIG = [
     {
         key: "4",
         label: "Resultados",
-        path: "/app/4",
+        path: "/app/TODO",
         searchHidden: true,
         placeholder: "",
         disabled: true,
@@ -57,7 +56,14 @@ export function Header() {
     }, []);
 
     useEffect(() => {
-        const currentTab = TABS_CONFIG.find((tab) => pathname === tab.path);
+        let currentTab = TABS_CONFIG.find((tab) => pathname === tab.path);
+
+        if (!currentTab) {
+            currentTab = TABS_CONFIG.find(
+                (tab) => tab.path !== "/app" && pathname.startsWith(tab.path)
+            );
+        }
+        
         if (currentTab && currentTab.key !== activeTab) {
             setActiveTab(currentTab.key);
         }
