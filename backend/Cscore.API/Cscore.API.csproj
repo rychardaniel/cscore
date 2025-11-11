@@ -18,10 +18,19 @@
       <Content Include="..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
+      <Content Remove="Repositories\**" />
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Profiles\" />
+      <Compile Remove="Repositories\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="Repositories\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Repositories\**" />
     </ItemGroup>
 
 </Project>

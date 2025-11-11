@@ -1,36 +1,37 @@
+using Cscore.API.Data;
 using Cscore.API.Models;
-using Cscore.API.Repositories;
+using MongoDB.Driver;
 
 namespace Cscore.API.Services;
 
 public class ChampionshipService
 {
-    private readonly ChampionshipRepository _repository;
+    private readonly IMongoCollection<ChampionshipModel> _championships;
 
-    public ChampionshipService(ChampionshipRepository repository)
+    public ChampionshipService(MongoContext context)
     {
-        _repository = repository;
+        _championships = context.Championships;
     }
 
     public async Task<List<ChampionshipModel>> GetAllAsync() =>
-        await _repository.GetAllAsync();
+        await _championships.Find(_ => true).ToListAsync();
 
     public async Task<ChampionshipModel?> GetByIdAsync(string id) =>
-        await _repository.GetByIdAsync(id);
+        await _championships.Find(c => c.Id == id).FirstOrDefaultAsync();
 
     public async Task<ChampionshipModel> CreateAsync(ChampionshipModel championship)
     {
-        await _repository.CreateAsync(championship);
+        await _championships.InsertOneAsync(championship);
         return championship;
     }
 
     public async Task<ChampionshipModel> UpdateAsync(string id, ChampionshipModel championship)
     {
-        await _repository.UpdateAsync(id, championship);
+        await _championships.ReplaceOneAsync(c => c.Id == id, championship);
         championship.Id = id;
         return championship;
     }
 
     public async Task DeleteAsync(string id) =>
-        await _repository.DeleteAsync(id);
+        await _championships.DeleteOneAsync(c => c.Id == id);
 }

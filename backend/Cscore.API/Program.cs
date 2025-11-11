@@ -1,5 +1,4 @@
 using Cscore.API.Data;
-using Cscore.API.Repositories;
 using Cscore.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,7 +11,7 @@ builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("Mo
 
 builder.Services.AddSingleton<MongoContext>();
 builder.Services.AddScoped<ChampionshipService>();
-builder.Services.AddScoped<ChampionshipRepository>();
+builder.Services.AddScoped<MatchService>();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

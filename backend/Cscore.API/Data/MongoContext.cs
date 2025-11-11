@@ -16,4 +16,7 @@ public class MongoContext
 
     public IMongoCollection<ChampionshipModel> Championships =>
         _database.GetCollection<ChampionshipModel>("championships");
+
+    public IMongoCollection<MatchModel> Matches =>
+        _database.GetCollection<MatchModel>("matches");
 }
