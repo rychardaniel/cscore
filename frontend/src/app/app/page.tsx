@@ -20,7 +20,6 @@ export default function App() {
                         <Button
                             type="link"
                             icon={<RightOutlined />}
-                            iconPosition="end"
                             onClick={() => router.push("/app/championships")}
                         >
                             Ir para campeonatos

@@ -119,7 +119,6 @@ export function Header() {
                 placement="right"
                 onClose={() => setMobileMenuOpen(false)}
                 open={mobileMenuOpen}
-                width={280}
             >
                 <div className="flex flex-col gap-2">
                     {TABS_CONFIG.map((tab) => (

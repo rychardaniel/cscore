@@ -1,6 +1,6 @@
 import { Metadata } from "next";
-import { Header } from "../components/header/header";
-import { LayoutDefault } from "../components/layout/layoutDefault";
+import { Header } from "@/components/header/header";
+import { LayoutDefault } from "@/components/layout/layoutDefault";
 
 export const metadata: Metadata = {
     title: "Cscore",

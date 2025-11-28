@@ -1,7 +1,7 @@
 "use client";
 
-import { Championship } from "@/app/interfaces/championship";
-import { ChampionshipService } from "@/app/services/championshipService";
+import { Championship } from "@/interfaces/championship";
+import { ChampionshipService } from "@/services/championshipService";
 import { Button, Card, Empty, Spin, Typography } from "antd";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
