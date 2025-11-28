@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Work_Sans } from "next/font/google";
 import "./globals.css";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 const workSans = Work_Sans({
     subsets: ["latin"],
@@ -23,7 +24,9 @@ export default function RootLayout({
     return (
         <html lang="pt-BR">
             <body className={`${workSans.className} antialiased`}>
-                <AntdRegistry>{children}</AntdRegistry>
+                <AntdRegistry>
+                    <AuthProvider>{children}</AuthProvider>
+                </AntdRegistry>
             </body>
         </html>
     );

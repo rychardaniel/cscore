@@ -55,7 +55,14 @@ public class UserService : IUserService
         return GenerateJwtToken(user);
     }
 
+    public async Task<UserResponseDto?> GetByIdAsync(int id)
+    {
+        var user = await _userRepository.GetByIdAsync(id);
+        return user == null ? null : _mapper.Map<UserResponseDto>(user);
+    }
+
     private string GenerateJwtToken(UserModel user)
+
     {
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.ASCII.GetBytes(_configuration["Jwt:SecretKey"]!);

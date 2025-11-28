@@ -61,6 +61,41 @@ DOCUMENTAÇÃO DO RECURSO: USUÁRIO
    - 400 Bad Request: E-mail ou senha inválidos.
    - 500 Internal Server Error: Erro no servidor.
 
+   -----------------------------------------------------------------------------
+
+   3.3. Obter Usuário Atual (Me)
+
+   Rota: GET /users/me
+   Descrição: Retorna os dados do usuário autenticado.
+   Requer Autenticação: Sim (Cookie JWT).
+
+   Resposta de Sucesso (200 OK):
+   {
+       "id": 1,
+       "name": "Nome do Usuário",
+       "email": "usuario@exemplo.com",
+       "createdAt": "2023-10-27T10:00:00Z"
+   }
+
+   Erros Comuns:
+   - 401 Unauthorized: Se o usuário não estiver logado ou o token for inválido.
+   - 404 Not Found: Se o usuário do token não existir mais no banco.
+
+   -----------------------------------------------------------------------------
+
+   3.4. Sair (Logout)
+
+   Rota: POST /users/logout
+   Descrição: Encerra a sessão do usuário removendo o cookie de autenticação.
+
+   Resposta de Sucesso (200 OK):
+   {
+       "message": "Logout realizado com sucesso"
+   }
+
+   Cookies Removidos:
+   - jwt: O cookie é expirado/removido pelo navegador.
+
 4. Observações para o Frontend
    - O token JWT é gerenciado automaticamente pelo navegador via Cookies.
    - Não é necessário enviar o token manualmente no header Authorization para as requisições subsequentes, o navegador fará isso automaticamente (desde que o backend e frontend estejam no mesmo domínio ou com CORS/Credentials configurados corretamente).
