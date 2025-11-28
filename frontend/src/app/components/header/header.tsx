@@ -1,14 +1,13 @@
 "use client";
 
-import { Flex, TabsProps } from "antd";
+import { Flex, Drawer, Button } from "antd";
 import { Icon } from "@iconify/react";
 import { Notification } from "./notification";
 import { AvatarIcon } from "./avatar";
 import { TabsHeader } from "./tabs";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { Grid } from "antd";
-const { useBreakpoint } = Grid;
+import { MenuOutlined } from "@ant-design/icons";
 
 const TABS_CONFIG = [
     {
@@ -47,11 +46,11 @@ const TABS_CONFIG = [
 
 export function Header() {
     const [activeTab, setActiveTab] = useState<string>("");
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const pathname = usePathname();
     const router = useRouter();
-    const screens = useBreakpoint();
 
-    const tabs: TabsProps["items"] = useMemo(() => {
+    const tabs = useMemo(() => {
         return TABS_CONFIG.map(({ key, label, disabled }) => ({ key, label, disabled }));
     }, []);
 
@@ -74,64 +73,68 @@ export function Header() {
         if (tab) {
             setActiveTab(key);
             router.push(tab.path);
+            setMobileMenuOpen(false);
         }
     };
 
-    if (screens.md === undefined) return <></>
-
-    if (screens.md) {
-        return (
-            <Flex
-                justify="center"
-                align="center"
-                style={{
-                    height: 64,
-                    borderBottom: "1px solid var(--gray-light-2)",
-                    boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
-                }}
-            >
-                <div className="w-full max-w-[1200px] p-4 h-full flex justify-between items-center gap-4">
-                    <Flex gap={5}>
-                        <Icon icon="iconoir:graduation-cap" className="text-2xl text-(--blue)" />
-                        <h2 className="font-bold">Cscore</h2>
+    return (
+        <>
+            <header className="h-16 border-b border-gray-light-2 bg-background shadow-sm sticky top-0 z-40">
+                <div className="w-full max-w-[1200px] mx-auto px-4 h-full flex justify-between items-center">
+                    {/* Logo */}
+                    <Flex gap={8} align="center" className="cursor-pointer" onClick={() => router.push("/app")}>
+                        <Icon icon="iconoir:graduation-cap" className="text-2xl text-blue" />
+                        <h2 className="font-bold text-lg hidden sm:block">Cscore</h2>
                     </Flex>
-                    <TabsHeader items={tabs} activeKey={activeTab} setActiveTab={handleTabChange} />
-                    <Flex gap={"1rem"}>
+
+                    {/* Desktop Navigation */}
+                    <div className="hidden md:block flex-1 mx-8">
+                        <TabsHeader items={tabs} activeKey={activeTab} setActiveTab={handleTabChange} />
+                    </div>
+
+                    {/* Actions */}
+                    <Flex gap={16} align="center">
                         <Notification />
                         <AvatarIcon />
+                        
+                        {/* Mobile Menu Button */}
+                        <Button 
+                            type="text" 
+                            icon={<MenuOutlined />} 
+                            className="md:hidden"
+                            onClick={() => setMobileMenuOpen(true)}
+                        />
                     </Flex>
                 </div>
-            </Flex>
-        );
-    }
+            </header>
 
-    // Mobile Header
-    return (
-        <Flex
-            justify="center"
-            align="center"
-            style={{
-                height: 128,
-                borderBottom: "1px solid var(--gray-light-2)",
-                boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
-            }}
-        >
-            <Flex vertical justify="center" align="center" flex={1}>
-                <div className="w-full max-w-[1200px] p-4 h-full flex justify-between items-center gap-4">
-                    <Flex justify="space-between" style={{ width: "100%" }} align="center">
-                        <Flex gap={5}>
-                            <Icon
-                                icon="iconoir:graduation-cap"
-                                className="text-2xl text-(--blue)"
-                            />
-                            <h2 className="font-bold">Cscore</h2>
-                        </Flex>
+            {/* Mobile Navigation Drawer */}
+            <Drawer
+                title={
+                    <Flex gap={8} align="center">
+                        <Icon icon="iconoir:graduation-cap" className="text-2xl text-blue" />
+                        <span className="font-bold">Cscore</span>
                     </Flex>
-                    <Notification />
-                    <AvatarIcon />
+                }
+                placement="right"
+                onClose={() => setMobileMenuOpen(false)}
+                open={mobileMenuOpen}
+                width={280}
+            >
+                <div className="flex flex-col gap-2">
+                    {TABS_CONFIG.map((tab) => (
+                        <Button
+                            key={tab.key}
+                            type={activeTab === tab.key ? "primary" : "text"}
+                            className="w-full justify-start text-left"
+                            disabled={tab.disabled}
+                            onClick={() => handleTabChange(tab.key)}
+                        >
+                            {tab.label}
+                        </Button>
+                    ))}
                 </div>
-                <TabsHeader items={tabs} activeKey={activeTab} setActiveTab={handleTabChange} />
-            </Flex>
-        </Flex>
+            </Drawer>
+        </>
     );
 }

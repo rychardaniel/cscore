@@ -1,22 +1,19 @@
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace Cscore.API.Models;
 
 public class MatchModel
 {
-    [BsonId]
-    [BsonIgnoreIfNull]
-    [BsonRepresentation(BsonType.String)]
-    public string? Id { get; set; } = Guid.NewGuid().ToString("N")[..8];
+    public int Id { get; set; }
 
-    [BsonElement("name")]
-    public string Name { get; set; } = String.Empty;
+    public string Name { get; set; }
 
-    [BsonRepresentation(BsonType.String)]
-    public string IdChampionship { get; set; } = String.Empty;
+    public int ChampionshipId { get; set; }
+
+    public ChampionshipModel Championship { get; set; }
     
-    [BsonElement("typeMatch")]
     public TypeMatch TypeMatch { get; set; }
 }
 

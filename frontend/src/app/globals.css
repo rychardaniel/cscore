@@ -9,22 +9,19 @@
     --gray: #9CA3AF;
 }
 
-@theme inline {
+@theme {
     --color-background: var(--background);
     --color-foreground: var(--foreground);
-    --font-sans: var(--font-geist-sans);
-    --font-mono: var(--font-geist-mono);
+    --font-sans: var(--font-work-sans);
+    --color-blue: var(--blue);
+    --color-gray-light-1: var(--gray-light-1);
+    --color-gray-light-2: var(--gray-light-2);
+    --color-gray: var(--gray);
 }
-
-/* @media (prefers-color-scheme: dark) {
-    :root {
-        --background: #111827;
-        --foreground: #F6F7F8;
-    }
-} */
 
 body {
     background: var(--background);
     color: var(--foreground);
+    font-family: var(--font-work-sans), sans-serif;
     font-size: 16px;
 }

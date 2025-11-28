@@ -8,8 +8,8 @@ public record CreateMatchDto(
 );
 
 public record MatchResponseDto(
-    string Id,
+    int Id,
     string Name,
-    string IdChampionship,
+    int ChampionshipId,
     TypeMatch TypeMatch
 );

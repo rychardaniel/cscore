@@ -10,26 +10,26 @@ namespace Cscore.API.Controllers;
 [Route("championships")]
 public class ChampionshipsController : ControllerBase
 {
-    private readonly ChampionshipService _championshipService;
+    private readonly IChampionshipService _championshipService;
     private readonly IMapper _mapper;
 
-    public ChampionshipsController(ChampionshipService championshipService, IMapper mapper)
+    public ChampionshipsController(IChampionshipService championshipService, IMapper mapper)
     {
         _championshipService = championshipService;
         _mapper = mapper;
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
-        var championships = await _championshipService.GetAllAsync();
+        var championships = await _championshipService.GetAllAsync(page, pageSize);
         var response = _mapper.Map<List<ChampionshipResponseDto>>(championships);
 
         return Ok(response);
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetById([FromRoute] string id)
+    public async Task<IActionResult> GetById([FromRoute] int id)
     {
         var championshipModel = await _championshipService.GetByIdAsync(id);
 
@@ -52,7 +52,7 @@ public class ChampionshipsController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Put([FromRoute] string id, [FromBody] CreateChampionshipDto dto)
+    public async Task<IActionResult> Put([FromRoute] int id, [FromBody] CreateChampionshipDto dto)
     {
         var championshipModel = _mapper.Map<ChampionshipModel>(dto);
         var editedChampionship = await _championshipService.UpdateAsync(id, championshipModel);
@@ -62,7 +62,7 @@ public class ChampionshipsController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete([FromRoute] string id)
+    public async Task<IActionResult> Delete([FromRoute] int id)
     {
         await _championshipService.DeleteAsync(id);
         return NoContent();

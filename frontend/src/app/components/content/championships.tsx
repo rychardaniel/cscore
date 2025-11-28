@@ -2,7 +2,7 @@
 
 import { Championship } from "@/app/interfaces/championship";
 import { ChampionshipService } from "@/app/services/championshipService";
-import { Button, Card, Empty, Flex, Spin, Typography } from "antd";
+import { Button, Card, Empty, Spin, Typography } from "antd";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -30,26 +30,29 @@ export function ChampionshipsContent() {
     }, []);
 
     return (
-        <Flex flex={1} vertical gap={4}>
-            <Title level={2} style={{ margin: 0 }}>
-                Campeonatos em Andamento
-            </Title>
-            <Title level={4} type="secondary" style={{ margin: 0 }}>
-                Acompanhe os campeonatos universitários
-            </Title>
+        <div className="flex flex-col gap-4">
+            <div>
+                <Title level={2} className="!m-0">
+                    Campeonatos em Andamento
+                </Title>
+                <Title level={4} type="secondary" className="!m-0 !mt-1">
+                    Acompanhe os campeonatos universitários
+                </Title>
+            </div>
+            
             <Spin spinning={loading}>
-                <Flex vertical gap={4} style={{ marginTop: "1rem" }}>
+                <div className="flex flex-col gap-4 mt-4">
                     {championships?.length > 0 ? (
                         championships.map((item) => (
-                            <Card key={item.id}>
-                                <Flex justify="space-between" align="center">
-                                    <Flex vertical>
-                                        <Title level={4} style={{ margin: 0 }}>
+                            <Card key={item.id} className="shadow-sm hover:shadow-md transition-shadow">
+                                <div className="flex justify-between items-center flex-wrap gap-4">
+                                    <div className="flex flex-col">
+                                        <Title level={4} className="!m-0">
                                             {item.name}
                                         </Title>
-                                        <Text>{item.university}</Text>
-                                    </Flex>
-                                    <Flex>
+                                        <Text className="text-gray-500">{item.university}</Text>
+                                    </div>
+                                    <div>
                                         <Button
                                             type="primary"
                                             onClick={() =>
@@ -58,15 +61,15 @@ export function ChampionshipsContent() {
                                         >
                                             Ver detalhes
                                         </Button>
-                                    </Flex>
-                                </Flex>
+                                    </div>
+                                </div>
                             </Card>
                         ))
                     ) : (
                         <Empty description={"Sem dados"} />
                     )}
-                </Flex>
+                </div>
             </Spin>
-        </Flex>
+        </div>
     );
 }

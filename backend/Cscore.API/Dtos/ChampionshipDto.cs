@@ -8,7 +8,7 @@ public record CreateChampionshipDto(
 );
 
 public record ChampionshipResponseDto(
-    string Id,
+    int Id,
     string Name,
     string University,
     DateTime StartDate,

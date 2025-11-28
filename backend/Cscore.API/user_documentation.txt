@@ -1,0 +1,67 @@
+DOCUMENTAÇÃO DO RECURSO: USUÁRIO
+
+1. Visão Geral
+   O recurso de usuário gerencia o acesso e a identificação dos usuários no sistema.
+   A autenticação é realizada via JWT (JSON Web Token) armazenado em um cookie HttpOnly seguro.
+
+2. Propriedades do Usuário (Modelo de Resposta)
+   - id (int): Identificador único do usuário.
+   - name (string): Nome completo do usuário.
+   - email (string): Endereço de e-mail do usuário (único no sistema).
+   - createdAt (datetime): Data e hora de criação do usuário.
+
+3. Endpoints (Rotas)
+
+   3.1. Criar Usuário (Registro)
+   
+   Rota: POST /users/register
+   Descrição: Cria uma nova conta de usuário no sistema.
+   
+   Corpo da Requisição (JSON):
+   {
+       "name": "Nome do Usuário",
+       "email": "usuario@exemplo.com",
+       "password": "senha_segura"
+   }
+
+   Resposta de Sucesso (201 Created):
+   {
+       "id": 1,
+       "name": "Nome do Usuário",
+       "email": "usuario@exemplo.com",
+       "createdAt": "2023-10-27T10:00:00Z"
+   }
+
+   Erros Comuns:
+   - 400 Bad Request: Se o e-mail já estiver cadastrado ou dados inválidos.
+
+   -----------------------------------------------------------------------------
+
+   3.2. Autenticar Usuário (Login)
+
+   Rota: POST /users/login
+   Descrição: Autentica o usuário e define o cookie de sessão.
+
+   Corpo da Requisição (JSON):
+   {
+       "email": "usuario@exemplo.com",
+       "password": "senha_segura"
+   }
+
+   Resposta de Sucesso (200 OK):
+   {
+       "message": "Login realizado com sucesso"
+   }
+
+   Cookies Definidos:
+   - jwt: Contém o token de acesso. 
+     - Configuração: HttpOnly=true, Secure=true (em prod), SameSite=Strict, Expires=8h.
+
+   Erros Comuns:
+   - 400 Bad Request: E-mail ou senha inválidos.
+   - 500 Internal Server Error: Erro no servidor.
+
+4. Observações para o Frontend
+   - O token JWT é gerenciado automaticamente pelo navegador via Cookies.
+   - Não é necessário enviar o token manualmente no header Authorization para as requisições subsequentes, o navegador fará isso automaticamente (desde que o backend e frontend estejam no mesmo domínio ou com CORS/Credentials configurados corretamente).
+   - Para ambientes de desenvolvimento (localhost), certifique-se de que o navegador não esteja bloqueando cookies de terceiros se o frontend e backend estiverem em portas diferentes.

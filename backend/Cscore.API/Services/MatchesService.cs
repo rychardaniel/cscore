@@ -1,59 +1,66 @@
-using Cscore.API.Data;
 using Cscore.API.Models;
-using MongoDB.Driver;
+using Cscore.API.Repositories;
 
 namespace Cscore.API.Services;
 
-public class MatchService
+public class MatchService : IMatchService
 {
-    private readonly IMongoCollection<MatchModel> _matches;
-    private readonly ChampionshipService _championshipService;
+    private readonly IMatchRepository _matchRepository;
+    private readonly IChampionshipRepository _championshipRepository;
 
-    public MatchService(MongoContext context, ChampionshipService championshipService)
+    public MatchService(IMatchRepository matchRepository, IChampionshipRepository championshipRepository)
     {
-        _matches = context.Matches;
-        _championshipService = championshipService;
+        _matchRepository = matchRepository;
+        _championshipRepository = championshipRepository;
     }
 
-    public async Task<List<MatchModel>> GetAllAsync(string idChampionship) =>
-        await _matches.Find(x => x.IdChampionship == idChampionship).ToListAsync();
+    public async Task<List<MatchModel>> GetAllAsync(int championshipId, int page, int pageSize) =>
+        await _matchRepository.GetAllAsync(championshipId, page, pageSize);
 
-    public async Task<MatchModel?> GetByIdAsync(string idChampionship, string id) =>
-        await _matches.Find(x => x.IdChampionship == idChampionship && x.Id == id).FirstOrDefaultAsync();
-
-    public async Task<MatchModel> CreateAsync(string idChampionship, MatchModel match)
+    public async Task<MatchModel?> GetByIdAsync(int championshipId, int id) =>
+        await _matchRepository.GetByIdAsync(championshipId, id);
+    
+    public async Task<MatchModel> CreateAsync(int championshipId, MatchModel match)
     {
-        var championship = await _championshipService.GetByIdAsync(idChampionship);
+        var championship = await _championshipRepository.GetByIdAsync(championshipId);
 
-        if (championship == null)
+        if (championship is null)
             throw new ArgumentException("Campeonato não encontrado");
 
-        match.IdChampionship = idChampionship;
-        
-        await _matches.InsertOneAsync(match);
+        match.ChampionshipId = championshipId;
+
+        await _matchRepository.CreateAsync(match);
+
         return match;
     }
 
-    public async Task<MatchModel> UpdateAsync(string idChampionship, string id, MatchModel match)
+    public async Task<MatchModel> UpdateAsync(int championshipId, int id, MatchModel updatedData)
     {
-        var championship = await _championshipService.GetByIdAsync(idChampionship);
+        var championship = await _championshipRepository.GetByIdAsync(championshipId);
 
-        if (championship == null)
+        if (championship is null)
             throw new ArgumentException("Campeonato não encontrado");
 
-        var matchExists = GetByIdAsync(idChampionship, id);
+        var match = await _matchRepository.GetByIdAsync(championshipId, id);
 
-        if (matchExists.Result == null)
-            throw new ArgumentException("Partida não encontrado");
+        if (match is null)
+            throw new ArgumentException("Partida não encontrada");
 
-        match.Id = id;
-        match.IdChampionship = idChampionship;
-        
-        await _matches.ReplaceOneAsync(x => x.IdChampionship == idChampionship && x.Id == id, match);
-        championship.Id = id;
+        match.ChampionshipId = championshipId;
+        match.Name = updatedData.Name;
+        match.TypeMatch = updatedData.TypeMatch;
+
+        await _matchRepository.UpdateAsync(match);
+
         return match;
     }
 
-    public async Task<MatchModel?> DeleteAsync(string idChampionship, string id) =>
-        await _matches.FindOneAndDeleteAsync(x => x.IdChampionship == idChampionship && x.Id == id);
+    public async Task DeleteAsync(int championshipId, int id) {
+        var match = await _matchRepository.GetByIdAsync(championshipId, id);
+
+        if (match is null)
+            throw new ArgumentException("Partida não encontrada");
+
+        await _matchRepository.DeleteAsync(match);
+    }
 }

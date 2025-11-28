@@ -1,24 +1,16 @@
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-
 namespace Cscore.API.Models;
 
 public class ChampionshipModel
 {
-    [BsonId]
-    [BsonIgnoreIfNull]
-    [BsonRepresentation(BsonType.String)]
-    public string? Id { get; set; } = Guid.NewGuid().ToString("N")[..8];
+    public int Id { get; set; }
     
-    [BsonElement("name")]
-    public string Name { get; set; } = String.Empty;
+    public string Name { get; set; }
     
-    [BsonElement("university")]
-    public string University { get; set; } = String.Empty;
+    public string University { get; set; }
 
-    [BsonElement("startDate")]
     public DateTime StartDate { get; set; }
 
-    [BsonElement("endDate")]
     public DateTime EndDate { get; set; }
+    
+    public List<MatchModel>? Matches { get; set; }
 }
