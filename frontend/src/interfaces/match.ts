@@ -68,7 +68,7 @@ export interface MatchScore {
     id: string;
     matchId: number;
     sportType: number;
-    scoreData: any; // Dynamic structure based on sport type
+    scoreData: Record<string, unknown>; // Dynamic structure based on sport type
     updatedAt: string;
     updatedByUserId: number;
 }
@@ -80,7 +80,7 @@ export interface MatchEvent {
     occurredAt: string;
     gameMinute?: number;
     participantId?: number;
-    details?: any;
+    details?: Record<string, unknown>;
     registeredByUserId: number;
 }
 

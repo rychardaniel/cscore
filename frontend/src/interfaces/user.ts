@@ -20,4 +20,6 @@ export interface LoginResponse {
     message: string;
 }
 
-export interface RegisterResponse extends User {}
+export interface UserResponseDto extends User {
+    id: number;
+}

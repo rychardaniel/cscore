@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import { Match, MatchEvent, MatchScore, MatchStatus, SportType } from "@/interfaces/match";
 
 export interface MatchFilters {

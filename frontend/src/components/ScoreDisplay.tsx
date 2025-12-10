@@ -5,7 +5,7 @@ const { Text, Title } = Typography;
 
 interface ScoreDisplayProps {
     sportType: SportType;
-    scoreData: any;
+    scoreData: unknown;
 }
 
 export function ScoreDisplay({ sportType, scoreData }: ScoreDisplayProps) {
@@ -28,16 +28,16 @@ export function ScoreDisplay({ sportType, scoreData }: ScoreDisplayProps) {
             <div className="flex flex-col gap-6">
                 <div className="flex justify-center items-center gap-8">
                     <div className="text-center">
-                        <Title level={1} className="!m-0">
+                        <Title level={1} className="m-0">
                             {score.homeScore}
                         </Title>
                         <Text type="secondary">Casa</Text>
                     </div>
-                    <Title level={2} type="secondary" className="!m-0">
+                    <Title level={2} type="secondary" className="m-0">
                         -
                     </Title>
                     <div className="text-center">
-                        <Title level={1} className="!m-0">
+                        <Title level={1} className="m-0">
                             {score.awayScore}
                         </Title>
                         <Text type="secondary">Visitante</Text>
@@ -73,16 +73,16 @@ export function ScoreDisplay({ sportType, scoreData }: ScoreDisplayProps) {
         return (
             <div className="flex justify-center items-center gap-8">
                 <div className="text-center">
-                    <Title level={1} className="!m-0">
+                    <Title level={1} className="m-0">
                         {score.homeScore}
                     </Title>
                     <Text type="secondary">Casa</Text>
                 </div>
-                <Title level={2} type="secondary" className="!m-0">
+                <Title level={2} type="secondary" className="m-0">
                     -
                 </Title>
                 <div className="text-center">
-                    <Title level={1} className="!m-0">
+                    <Title level={1} className="m-0">
                         {score.awayScore}
                     </Title>
                     <Text type="secondary">Visitante</Text>
@@ -98,13 +98,13 @@ export function ScoreDisplay({ sportType, scoreData }: ScoreDisplayProps) {
             <div className="text-center">
                 {score.winner ? (
                     <div>
-                        <Title level={3} className="!m-0 !mb-2">
+                        <Title level={3} className="m-0 mb-2">
                             Vencedor: {score.winner === "home" ? "Casa" : "Visitante"}
                         </Title>
                         {score.moves && <Text type="secondary">{score.moves.length} jogadas</Text>}
                     </div>
                 ) : (
-                    <Title level={3} className="!m-0">
+                    <Title level={3} className="m-0">
                         Empate
                     </Title>
                 )}

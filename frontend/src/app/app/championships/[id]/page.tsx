@@ -72,14 +72,14 @@ export default function ChampionshipDetailPage() {
                 <Button
                     type="link"
                     onClick={() => router.push("/app/championships")}
-                    className="!px-0 mb-2"
+                    className="px-0 mb-2"
                 >
                     ← Voltar para campeonatos
                 </Button>
-                <Title level={2} className="!m-0">
+                <Title level={2} className="m-0">
                     {championshipName || "Campeonato"}
                 </Title>
-                <Title level={4} type="secondary" className="!m-0 !mt-1">
+                <Title level={4} type="secondary" className="m-0 mt-1">
                     Acompanhe todas as partidas deste campeonato
                 </Title>
             </div>

@@ -4,24 +4,19 @@ import { useAuth } from "@/contexts/AuthContext";
 import { LoginRequest } from "@/interfaces/user";
 import { Button, Card, Form, Input, Typography } from "antd";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 const { Title, Text } = Typography;
 
 export default function LoginPage() {
-    const { login, logout } = useAuth();
+    const { login } = useAuth();
     const [loading, setLoading] = useState(false);
-
-    // Clear session when accessing login page
-    useEffect(() => {
-        logout();
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     const onFinish = async (values: LoginRequest) => {
         setLoading(true);
         try {
             await login(values);
-        } catch (error) {
+        } catch {
             // Error handled in context
         } finally {
             setLoading(false);
@@ -32,7 +27,9 @@ export default function LoginPage() {
         <div className="min-h-dvh flex items-center justify-center bg-gray-50 p-4">
             <Card className="w-full max-w-md shadow-lg">
                 <div className="text-center mb-8">
-                    <Title level={2} className="!mb-2">Bem-vindo de volta</Title>
+                    <Title level={2} className="mb-2">
+                        Bem-vindo de volta
+                    </Title>
                     <Text type="secondary">Insira suas credenciais para acessar sua conta</Text>
                 </div>
 

@@ -12,7 +12,9 @@ export default function App() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Card className="shadow-sm">
                     <div className="flex justify-center">
-                        <Typography.Title level={4} className="!m-0">Bem-vindo ao Cscore!</Typography.Title>
+                        <Typography.Title level={4} className="!m-0">
+                            Bem-vindo ao Cscore!
+                        </Typography.Title>
                     </div>
                 </Card>
                 <Card className="shadow-sm">

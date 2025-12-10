@@ -1,4 +1,5 @@
 import { Card, Tag, Typography } from "antd";
+import Image from "next/image";
 import { Match, MatchStatus, getSportName, getMatchStatusName } from "@/interfaces/match";
 
 const { Text } = Typography;
@@ -118,10 +119,12 @@ export function MatchCard({ match }: MatchCardProps) {
                                     className="flex items-center gap-2 flex-1"
                                 >
                                     {participant.logoUrl && (
-                                        <img
+                                        <Image
                                             src={participant.logoUrl}
                                             alt={participant.name}
-                                            className="w-6 h-6 rounded-full object-cover"
+                                            width={24}
+                                            height={24}
+                                            className="rounded-full object-cover"
                                         />
                                     )}
                                     <Text className="text-sm truncate">{participant.name}</Text>

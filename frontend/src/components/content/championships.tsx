@@ -39,12 +39,15 @@ export function ChampionshipsContent() {
                     Acompanhe os campeonatos universitários
                 </Title>
             </div>
-            
+
             <Spin spinning={loading}>
                 <div className="flex flex-col gap-4 mt-4">
                     {championships?.length > 0 ? (
                         championships.map((item) => (
-                            <Card key={item.id} className="shadow-sm hover:shadow-md transition-shadow">
+                            <Card
+                                key={item.id}
+                                className="shadow-sm hover:shadow-md transition-shadow"
+                            >
                                 <div className="flex justify-between items-center flex-wrap gap-4">
                                     <div className="flex flex-col">
                                         <Title level={4} className="!m-0">

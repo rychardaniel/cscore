@@ -16,7 +16,7 @@ export default function RegisterPage() {
         setLoading(true);
         try {
             await register(values);
-        } catch (error) {
+        } catch {
             // Error handled in context
         } finally {
             setLoading(false);
@@ -27,7 +27,9 @@ export default function RegisterPage() {
         <div className="min-h-dvh flex items-center justify-center bg-gray-50 p-4">
             <Card className="w-full max-w-md shadow-lg">
                 <div className="text-center mb-8">
-                    <Title level={2} className="!mb-2">Crie sua conta</Title>
+                    <Title level={2} className="mb-2">
+                        Crie sua conta
+                    </Title>
                     <Text type="secondary">Preencha os dados abaixo para começar</Text>
                 </div>
 

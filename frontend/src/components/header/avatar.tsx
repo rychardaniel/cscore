@@ -54,11 +54,21 @@ function AvatarContent({ onClose }: { onClose: () => void }) {
     return (
         <div className="min-w-[200px]">
             <div className="px-2 py-1">
-                <Title level={5} className="!m-0">{user?.name || "Usuário"}</Title>
-                <Text type="secondary" className="text-xs">{user?.email}</Text>
+                <Title level={5} className="!m-0">
+                    {user?.name || "Usuário"}
+                </Title>
+                <Text type="secondary" className="text-xs">
+                    {user?.email}
+                </Text>
             </div>
             <Divider className="my-2" />
-            <Button type="text" danger block onClick={handleLogout} className="text-left justify-start">
+            <Button
+                type="text"
+                danger
+                block
+                onClick={handleLogout}
+                className="text-left justify-start"
+            >
                 <Flex gap={8} align="center">
                     <Icon icon="material-symbols:logout" />
                     Sair

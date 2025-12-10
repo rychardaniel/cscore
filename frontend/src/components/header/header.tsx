@@ -82,25 +82,34 @@ export function Header() {
             <header className="h-16 border-b border-gray-light-2 bg-background shadow-sm sticky top-0 z-40">
                 <div className="w-full max-w-[1200px] mx-auto px-4 h-full flex justify-between items-center">
                     {/* Logo */}
-                    <Flex gap={8} align="center" className="cursor-pointer" onClick={() => router.push("/app")}>
+                    <Flex
+                        gap={8}
+                        align="center"
+                        className="cursor-pointer"
+                        onClick={() => router.push("/app")}
+                    >
                         <Icon icon="iconoir:graduation-cap" className="text-2xl text-blue" />
                         <h2 className="font-bold text-lg hidden sm:block">Cscore</h2>
                     </Flex>
 
                     {/* Desktop Navigation */}
                     <div className="hidden md:block flex-1 mx-8">
-                        <TabsHeader items={tabs} activeKey={activeTab} setActiveTab={handleTabChange} />
+                        <TabsHeader
+                            items={tabs}
+                            activeKey={activeTab}
+                            setActiveTab={handleTabChange}
+                        />
                     </div>
 
                     {/* Actions */}
                     <Flex gap={16} align="center">
                         <Notification />
                         <AvatarIcon />
-                        
+
                         {/* Mobile Menu Button */}
-                        <Button 
-                            type="text" 
-                            icon={<MenuOutlined />} 
+                        <Button
+                            type="text"
+                            icon={<MenuOutlined />}
                             className="md:hidden"
                             onClick={() => setMobileMenuOpen(true)}
                         />

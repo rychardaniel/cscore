@@ -3,7 +3,7 @@
 import { User, LoginRequest, RegisterRequest } from "@/interfaces/user";
 import { AuthService } from "@/services/authService";
 import { useRouter } from "next/navigation";
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import { message } from "antd";
 
 interface AuthContextType {
@@ -16,22 +16,22 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function AuthProvider({ children }: { children: ReactNode }) {
+export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
     const router = useRouter();
 
     // Restore session on mount
-    useState(() => {
+    useEffect(() => {
         const restoreSession = async () => {
             try {
                 const user = await AuthService.getMe();
                 setUser(user);
-            } catch (error) {
+            } catch {
                 // Not authenticated, just ignore
             }
         };
         restoreSession();
-    });
+    }, []);
 
     const login = async (data: LoginRequest) => {
         try {

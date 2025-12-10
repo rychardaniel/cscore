@@ -1,4 +1,10 @@
-import { LoginRequest, LoginResponse, RegisterRequest, RegisterResponse, User } from "@/interfaces/user";
+import {
+    LoginRequest,
+    LoginResponse,
+    RegisterRequest,
+    UserResponseDto,
+    User,
+} from "@/interfaces/user";
 
 export const AuthService = {
     async login(data: LoginRequest): Promise<LoginResponse> {
@@ -18,7 +24,7 @@ export const AuthService = {
         return response.json();
     },
 
-    async register(data: RegisterRequest): Promise<RegisterResponse> {
+    async register(data: RegisterRequest): Promise<UserResponseDto> {
         const response = await fetch("/api/users/register", {
             method: "POST",
             headers: {
@@ -50,9 +56,11 @@ export const AuthService = {
         // If not, this might fail or 404, but we should try.
         // If the backend doesn't have it, we just ignore the error.
         try {
-            await fetch("/api/users/logout", { method: "POST" });
-        } catch (error) {
-            // Ignore error on logout
+            await fetch("/api/users/logout", {
+                method: "POST",
+            });
+        } catch {
+            console.error("Erro ao fazer logout");
         }
     },
 };

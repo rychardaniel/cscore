@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Button, Card, Empty, Spin, Typography, Tag, Divider } from "antd";
+import Image from "next/image";
+import { Button, Card, Spin, Typography, Tag, Divider } from "antd";
 import { Match, MatchEvent, getSportName, getMatchStatusName } from "@/interfaces/match";
 import { publicMatchService } from "@/services/publicMatchService";
 import { ScoreDisplay } from "@/components/ScoreDisplay";
@@ -38,8 +39,10 @@ export default function MatchDetailPage() {
 
             setMatch(matchData);
             setEvents(eventsData);
-        } catch (err: any) {
-            setError(err.message || "Erro ao carregar dados da partida");
+        } catch (err) {
+            const errorMessage =
+                err instanceof Error ? err.message : "Erro ao carregar dados da partida";
+            setError(errorMessage);
             console.error(err);
         } finally {
             setLoading(false);
@@ -87,7 +90,7 @@ export default function MatchDetailPage() {
             <Button
                 type="link"
                 onClick={() => router.push(`/app/championships/${championshipId}`)}
-                className="!px-0"
+                className="px-0"
             >
                 ← Voltar para o campeonato
             </Button>
@@ -96,7 +99,7 @@ export default function MatchDetailPage() {
             <Card className="shadow-sm">
                 <div className="flex justify-between items-start flex-wrap gap-4">
                     <div className="flex-1">
-                        <Title level={2} className="!m-0 !mb-2">
+                        <Title level={2} className="m-0 mb-2">
                             {match.name}
                         </Title>
                         {match.championship && (
@@ -149,10 +152,12 @@ export default function MatchDetailPage() {
                             <Card key={participant.id} className="bg-gray-50">
                                 <div className="flex items-center gap-3">
                                     {participant.logoUrl && (
-                                        <img
+                                        <Image
                                             src={participant.logoUrl}
                                             alt={participant.name}
-                                            className="w-12 h-12 rounded-full object-cover"
+                                            width={48}
+                                            height={48}
+                                            className="rounded-full object-cover"
                                         />
                                     )}
                                     <div className="flex-1">
