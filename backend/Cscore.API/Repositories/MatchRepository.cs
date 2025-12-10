@@ -45,4 +45,54 @@ public class MatchRepository : IMatchRepository
         _db.Matches.Remove(match);
         await _db.SaveChangesAsync();
     }
+
+    public async Task<List<MatchModel>> GetPublicMatchesAsync(
+        int? championshipId,
+        SportType? sportType,
+        MatchStatus? status,
+        DateTime? date,
+        int page,
+        int pageSize)
+    {
+        var query = _db.Matches
+            .Include(m => m.Championship)
+            .Include(m => m.Participants)
+            .AsQueryable();
+
+        if (championshipId.HasValue)
+            query = query.Where(m => m.ChampionshipId == championshipId.Value);
+
+        if (sportType.HasValue)
+            query = query.Where(m => m.SportType == sportType.Value);
+
+        if (status.HasValue)
+            query = query.Where(m => m.Status == status.Value);
+
+        if (date.HasValue)
+            query = query.Where(m => m.ScheduledDate.Date == date.Value.Date);
+
+        return await query
+            .OrderByDescending(m => m.ScheduledDate)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+    }
+
+    public async Task<MatchModel?> GetByIdPublicAsync(int id)
+    {
+        return await _db.Matches
+            .Include(m => m.Championship)
+            .Include(m => m.Participants)
+            .FirstOrDefaultAsync(m => m.Id == id);
+    }
+
+    public async Task<List<MatchModel>> GetLiveMatchesAsync()
+    {
+        return await _db.Matches
+            .Include(m => m.Championship)
+            .Include(m => m.Participants)
+            .Where(m => m.Status == MatchStatus.InProgress)
+            .OrderBy(m => m.StartedAt)
+            .ToListAsync();
+    }
 }

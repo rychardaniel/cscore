@@ -3,6 +3,7 @@ using System;
 using Cscore.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Cscore.API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251206121056_ExpandMatchModelAndAddParticipants")]
+    partial class ExpandMatchModelAndAddParticipants
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,36 +24,6 @@ namespace Cscore.API.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("Cscore.API.Models.ChampionshipJudgeModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("AssignedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("assigned_at");
-
-                    b.Property<int>("ChampionshipId")
-                        .HasColumnType("integer")
-                        .HasColumnName("championship_id");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer")
-                        .HasColumnName("user_id");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ChampionshipId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("championship_judge", (string)null);
-                });
 
             modelBuilder.Entity("Cscore.API.Models.ChampionshipModel", b =>
                 {
@@ -222,37 +195,12 @@ namespace Cscore.API.Migrations
                         .HasColumnType("text")
                         .HasColumnName("password_hash");
 
-                    b.Property<int>("Role")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(2)
-                        .HasColumnName("role");
-
                     b.HasKey("Id");
 
                     b.HasIndex("Email")
                         .IsUnique();
 
                     b.ToTable("users", (string)null);
-                });
-
-            modelBuilder.Entity("Cscore.API.Models.ChampionshipJudgeModel", b =>
-                {
-                    b.HasOne("Cscore.API.Models.ChampionshipModel", "Championship")
-                        .WithMany("Judges")
-                        .HasForeignKey("ChampionshipId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Cscore.API.Models.UserModel", "User")
-                        .WithMany("ChampionshipJudges")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Championship");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Cscore.API.Models.MatchModel", b =>
@@ -279,19 +227,12 @@ namespace Cscore.API.Migrations
 
             modelBuilder.Entity("Cscore.API.Models.ChampionshipModel", b =>
                 {
-                    b.Navigation("Judges");
-
                     b.Navigation("Matches");
                 });
 
             modelBuilder.Entity("Cscore.API.Models.MatchModel", b =>
                 {
                     b.Navigation("Participants");
-                });
-
-            modelBuilder.Entity("Cscore.API.Models.UserModel", b =>
-                {
-                    b.Navigation("ChampionshipJudges");
                 });
 #pragma warning restore 612, 618
         }

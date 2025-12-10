@@ -4,12 +4,12 @@ namespace Cscore.API.Dtos;
 
 public record CreateMatchDto(
     string Name,
-    TypeMatch TypeMatch
+    SportType SportType
 );
 
 public record MatchResponseDto(
     int Id,
     string Name,
     int ChampionshipId,
-    TypeMatch TypeMatch
+    SportType SportType
 );

@@ -9,4 +9,5 @@ public interface IChampionshipRepository
     Task CreateAsync(ChampionshipModel championship);
     Task UpdateAsync(ChampionshipModel championship);
     Task DeleteAsync(ChampionshipModel championship);
+    Task<bool> IsUserJudgeOfChampionship(int userId, int championshipId);
 }

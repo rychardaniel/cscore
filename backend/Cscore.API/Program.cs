@@ -4,12 +4,17 @@ using Cscore.API.Middlewares;
 using Cscore.API.Repositories;
 using Cscore.API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+    });
 
 builder.Services.AddOpenApi();
 
@@ -24,11 +29,17 @@ builder.Services.AddSingleton<MongoContext>();
 builder.Services.AddScoped<IChampionshipRepository, ChampionshipRepository>();
 builder.Services.AddScoped<IMatchRepository, MatchRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IChampionshipJudgeRepository, ChampionshipJudgeRepository>();
+
+// MongoDB Repositories
+builder.Services.AddScoped<Cscore.API.Data.MongoDB.Repositories.IMatchScoreRepository, Cscore.API.Data.MongoDB.Repositories.MatchScoreRepository>();
+builder.Services.AddScoped<Cscore.API.Data.MongoDB.Repositories.IMatchEventRepository, Cscore.API.Data.MongoDB.Repositories.MatchEventRepository>();
 
 // Services
 builder.Services.AddScoped<IChampionshipService, ChampionshipService>();
 builder.Services.AddScoped<IMatchService, MatchService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IChampionshipJudgeService, ChampionshipJudgeService>();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -61,6 +72,18 @@ builder.Services.AddAuthentication(x =>
         }
     };
 });
+
+// Authorization
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy =>
+        policy.RequireRole("Admin"));
+
+    options.AddPolicy("JudgeOrAdmin", policy =>
+        policy.RequireRole("Judge", "Admin"));
+});
+
+builder.Services.AddScoped<IAuthorizationHandler, Cscore.API.Authorization.Handlers.JudgeAuthorizationHandler>();
 
 var app = builder.Build();
 

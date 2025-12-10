@@ -1,0 +1,818 @@
+openapi: 3.0.3
+info:
+    title: Cscore Championship Management API
+    description: API para gerenciamento de campeonatos universitários com sistema de placares online
+    version: 1.0.0
+    contact:
+        name: Cscore API Support
+
+servers:
+    - url: http://localhost:5000/api
+      description: Servidor de desenvolvimento local
+
+tags:
+    - name: Auth
+      description: Autenticação e gerenciamento de usuários
+    - name: Public Championships
+      description: Endpoints públicos para visualização de campeonatos (sem autenticação)
+    - name: Public Matches
+      description: Endpoints públicos para visualização de partidas (sem autenticação)
+    - name: Championships
+      description: Gerenciamento de campeonatos (requer autenticação)
+    - name: Championship Judges
+      description: Gerenciamento de juízes (apenas Admin)
+    - name: Matches
+      description: Gerenciamento de partidas (Judge/Admin)
+
+components:
+    securitySchemes:
+        cookieAuth:
+            type: apiKey
+            in: cookie
+            name: jwt
+            description: JWT token armazenado em cookie HttpOnly
+
+    schemas:
+        RegisterUserDto:
+            type: object
+            required:
+                - name
+                - email
+                - password
+            properties:
+                name:
+                    type: string
+                    example: João Silva
+                email:
+                    type: string
+                    format: email
+                    example: joao@example.com
+                password:
+                    type: string
+                    format: password
+                    example: senha123
+
+        LoginUserDto:
+            type: object
+            required:
+                - email
+                - password
+            properties:
+                email:
+                    type: string
+                    format: email
+                    example: joao@example.com
+                password:
+                    type: string
+                    format: password
+                    example: senha123
+
+        Championship:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    example: 1
+                name:
+                    type: string
+                    example: Intercomp 2024
+                university:
+                    type: string
+                    example: UFMG
+                startDate:
+                    type: string
+                    format: date-time
+                endDate:
+                    type: string
+                    format: date-time
+
+        CreateMatchDto:
+            type: object
+            required:
+                - name
+                - sportType
+            properties:
+                name:
+                    type: string
+                    example: Final - Vôlei Masculino
+                sportType:
+                    type: integer
+                    enum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+                    description: |
+                        1=Soletrando, 2=SuperMario, 3=Truco, 4=VolleyballFemale, 
+                        5=VolleyballMale, 6=VolleyballMixed, 7=Chess, 8=Bocha48,
+                        9=Canastra, 10=FIFA, 11=FutsalMale, 12=PingPong,
+                        13=RelayFemale, 14=RelayMale
+
+        Match:
+            type: object
+            properties:
+                id:
+                    type: integer
+                name:
+                    type: string
+                championshipId:
+                    type: integer
+                sportType:
+                    type: integer
+                status:
+                    type: integer
+                    enum: [1, 2, 3, 4, 5]
+                    description: 1=Scheduled, 2=InProgress, 3=Finished, 4=Canceled, 5=Postponed
+                scheduledDate:
+                    type: string
+                    format: date-time
+                startedAt:
+                    type: string
+                    format: date-time
+                    nullable: true
+                finishedAt:
+                    type: string
+                    format: date-time
+                    nullable: true
+                venue:
+                    type: string
+                    nullable: true
+                notes:
+                    type: string
+                    nullable: true
+
+        UpdateScoreDto:
+            type: object
+            required:
+                - scoreData
+            properties:
+                scoreData:
+                    type: object
+                    description: Estrutura JSON dinâmica dependendo do esporte
+                    example:
+                        homeScore: 3
+                        awayScore: 2
+                        sets:
+                            - home: 25
+                              away: 23
+                            - home: 22
+                              away: 25
+
+        CreateMatchEventDto:
+            type: object
+            required:
+                - eventType
+            properties:
+                eventType:
+                    type: string
+                    example: goal
+                gameMinute:
+                    type: integer
+                    nullable: true
+                    example: 45
+                participantId:
+                    type: integer
+                    nullable: true
+                details:
+                    type: object
+                    nullable: true
+
+        CreateParticipantDto:
+            type: object
+            required:
+                - type
+                - name
+                - side
+            properties:
+                type:
+                    type: integer
+                    enum: [1, 2]
+                    description: 1=Individual, 2=Team
+                name:
+                    type: string
+                    example: Time A
+                side:
+                    type: string
+                    example: home
+                logoUrl:
+                    type: string
+                    nullable: true
+
+        AssignJudgeDto:
+            type: object
+            required:
+                - userId
+            properties:
+                userId:
+                    type: integer
+                    example: 5
+
+paths:
+    /users/register:
+        post:
+            tags:
+                - Auth
+            summary: Registrar novo usuário
+            description: Cria uma nova conta de usuário (padrão = Judge)
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/RegisterUserDto"
+            responses:
+                "201":
+                    description: Usuário criado com sucesso
+                "400":
+                    description: E-mail já cadastrado
+
+    /users/login:
+        post:
+            tags:
+                - Auth
+            summary: Login de usuário
+            description: Autentica usuário e retorna JWT em cookie HttpOnly
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/LoginUserDto"
+            responses:
+                "200":
+                    description: Login realizado com sucesso
+                    headers:
+                        Set-Cookie:
+                            schema:
+                                type: string
+                                example: jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...; Path=/; HttpOnly
+                "401":
+                    description: Credenciais inválidas
+
+    /public/championships:
+        get:
+            tags:
+                - Public Championships
+            summary: Listar campeonatos (público)
+            parameters:
+                - name: page
+                  in: query
+                  schema:
+                      type: integer
+                      default: 1
+                - name: pageSize
+                  in: query
+                  schema:
+                      type: integer
+                      default: 20
+            responses:
+                "200":
+                    description: Lista de campeonatos
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/Championship"
+
+    /public/championships/{id}:
+        get:
+            tags:
+                - Public Championships
+            summary: Obter campeonato por ID (público)
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+            responses:
+                "200":
+                    description: Detalhes do campeonato
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Championship"
+                "404":
+                    description: Campeonato não encontrado
+
+    /public/matches:
+        get:
+            tags:
+                - Public Matches
+            summary: Listar partidas com filtros (público)
+            parameters:
+                - name: championshipId
+                  in: query
+                  schema:
+                      type: integer
+                - name: sportType
+                  in: query
+                  schema:
+                      type: integer
+                - name: status
+                  in: query
+                  schema:
+                      type: integer
+                - name: date
+                  in: query
+                  schema:
+                      type: string
+                      format: date
+                - name: page
+                  in: query
+                  schema:
+                      type: integer
+                      default: 1
+                - name: pageSize
+                  in: query
+                  schema:
+                      type: integer
+                      default: 20
+            responses:
+                "200":
+                    description: Lista de partidas
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/Match"
+
+    /public/matches/{id}:
+        get:
+            tags:
+                - Public Matches
+            summary: Obter partida por ID com detalhes (público)
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+            responses:
+                "200":
+                    description: Detalhes da partida
+                "404":
+                    description: Partida não encontrada
+
+    /public/matches/live:
+        get:
+            tags:
+                - Public Matches
+            summary: Listar partidas ao vivo (público)
+            responses:
+                "200":
+                    description: Lista de partidas em andamento
+
+    /public/matches/{id}/events:
+        get:
+            tags:
+                - Public Matches
+            summary: Obter eventos de uma partida (público)
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+            responses:
+                "200":
+                    description: Lista de eventos da partida
+
+    /championships:
+        get:
+            tags:
+                - Championships
+            summary: Listar campeonatos
+            security:
+                - cookieAuth: []
+            parameters:
+                - name: page
+                  in: query
+                  schema:
+                      type: integer
+                      default: 1
+                - name: pageSize
+                  in: query
+                  schema:
+                      type: integer
+                      default: 10
+            responses:
+                "200":
+                    description: Lista de campeonatos
+                "401":
+                    description: Não autenticado
+
+        post:
+            tags:
+                - Championships
+            summary: Criar campeonato (Admin)
+            security:
+                - cookieAuth: []
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/Championship"
+            responses:
+                "201":
+                    description: Campeonato criado
+                "401":
+                    description: Não autenticado
+                "403":
+                    description: Sem permissão (apenas Admin)
+
+    /championships/{id}:
+        get:
+            tags:
+                - Championships
+            summary: Obter campeonato por ID
+            security:
+                - cookieAuth: []
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+            responses:
+                "200":
+                    description: Detalhes do campeonato
+                "404":
+                    description: Campeonato não encontrado
+
+        put:
+            tags:
+                - Championships
+            summary: Atualizar campeonato (Admin)
+            security:
+                - cookieAuth: []
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/Championship"
+            responses:
+                "200":
+                    description: Campeonato atualizado
+                "403":
+                    description: Sem permissão
+
+        delete:
+            tags:
+                - Championships
+            summary: Deletar campeonato (Admin)
+            security:
+                - cookieAuth: []
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+            responses:
+                "204":
+                    description: Campeonato deletado
+                "403":
+                    description: Sem permissão
+
+    /championships/{championshipId}/judges:
+        get:
+            tags:
+                - Championship Judges
+            summary: Listar juízes de um campeonato (Admin)
+            security:
+                - cookieAuth: []
+            parameters:
+                - name: championshipId
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+            responses:
+                "200":
+                    description: Lista de juízes
+                "403":
+                    description: Sem permissão (apenas Admin)
+
+        post:
+            tags:
+                - Championship Judges
+            summary: Associar juiz a campeonato (Admin)
+            security:
+                - cookieAuth: []
+            parameters:
+                - name: championshipId
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/AssignJudgeDto"
+            responses:
+                "201":
+                    description: Juiz associado com sucesso
+                "404":
+                    description: Campeonato ou usuário não encontrado
+                "409":
+                    description: Juiz já está associado
+
+    /championships/{championshipId}/judges/{userId}:
+        delete:
+            tags:
+                - Championship Judges
+            summary: Remover juiz de campeonato (Admin)
+            security:
+                - cookieAuth: []
+            parameters:
+                - name: championshipId
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+                - name: userId
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+            responses:
+                "204":
+                    description: Juiz removido
+                "404":
+                    description: Associação não encontrada
+
+    /championships/{idChampionship}/matches:
+        get:
+            tags:
+                - Matches
+            summary: Listar partidas de um campeonato
+            parameters:
+                - name: idChampionship
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+                - name: page
+                  in: query
+                  schema:
+                      type: integer
+                      default: 1
+                - name: pageSize
+                  in: query
+                  schema:
+                      type: integer
+                      default: 10
+            responses:
+                "200":
+                    description: Lista de partidas
+
+        post:
+            tags:
+                - Matches
+            summary: Criar partida (Judge/Admin)
+            security:
+                - cookieAuth: []
+            parameters:
+                - name: idChampionship
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/CreateMatchDto"
+            responses:
+                "201":
+                    description: Partida criada
+                "403":
+                    description: Sem permissão
+
+    /championships/{idChampionship}/matches/{id}:
+        get:
+            tags:
+                - Matches
+            summary: Obter partida por ID
+            parameters:
+                - name: idChampionship
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+            responses:
+                "200":
+                    description: Detalhes da partida
+                "404":
+                    description: Partida não encontrada
+
+        put:
+            tags:
+                - Matches
+            summary: Atualizar partida (Judge/Admin)
+            security:
+                - cookieAuth: []
+            parameters:
+                - name: idChampionship
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/CreateMatchDto"
+            responses:
+                "200":
+                    description: Partida atualizada
+                "403":
+                    description: Sem permissão
+
+        delete:
+            tags:
+                - Matches
+            summary: Deletar partida (Judge/Admin)
+            security:
+                - cookieAuth: []
+            parameters:
+                - name: idChampionship
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+            responses:
+                "204":
+                    description: Partida deletada
+                "403":
+                    description: Sem permissão
+
+    /championships/{idChampionship}/matches/{id}/start:
+        post:
+            tags:
+                - Matches
+            summary: Iniciar partida (Judge/Admin)
+            security:
+                - cookieAuth: []
+            parameters:
+                - name: idChampionship
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+            responses:
+                "200":
+                    description: Partida iniciada
+                "400":
+                    description: Partida não pode ser iniciada (já iniciada ou status inválido)
+                "403":
+                    description: Sem permissão
+
+    /championships/{idChampionship}/matches/{id}/finish:
+        post:
+            tags:
+                - Matches
+            summary: Finalizar partida (Judge/Admin)
+            security:
+                - cookieAuth: []
+            parameters:
+                - name: idChampionship
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+            responses:
+                "200":
+                    description: Partida finalizada
+                "400":
+                    description: Partida não pode ser finalizada
+                "403":
+                    description: Sem permissão
+
+    /championships/{idChampionship}/matches/{id}/score:
+        put:
+            tags:
+                - Matches
+            summary: Atualizar placar (salvo no MongoDB) (Judge/Admin)
+            security:
+                - cookieAuth: []
+            parameters:
+                - name: idChampionship
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/UpdateScoreDto"
+            responses:
+                "200":
+                    description: Placar atualizado
+                "404":
+                    description: Partida não encontrada
+                "403":
+                    description: Sem permissão
+
+    /championships/{idChampionship}/matches/{id}/events:
+        post:
+            tags:
+                - Matches
+            summary: Adicionar evento à partida (salvo no MongoDB) (Judge/Admin)
+            security:
+                - cookieAuth: []
+            parameters:
+                - name: idChampionship
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/CreateMatchEventDto"
+            responses:
+                "201":
+                    description: Evento criado
+                "403":
+                    description: Sem permissão
+
+    /championships/{idChampionship}/matches/{id}/participants:
+        post:
+            tags:
+                - Matches
+            summary: Adicionar participante à partida (Judge/Admin)
+            security:
+                - cookieAuth: []
+            parameters:
+                - name: idChampionship
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/CreateParticipantDto"
+            responses:
+                "201":
+                    description: Participante adicionado
+                "403":
+                    description: Sem permissão

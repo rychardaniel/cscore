@@ -43,4 +43,10 @@ public class ChampionshipRepository : IChampionshipRepository
         _db.Championships.Remove(championship);
         await _db.SaveChangesAsync();
     }
+
+    public async Task<bool> IsUserJudgeOfChampionship(int userId, int championshipId)
+    {
+        return await _db.ChampionshipJudges
+            .AnyAsync(cj => cj.UserId == userId && cj.ChampionshipId == championshipId);
+    }
 }
